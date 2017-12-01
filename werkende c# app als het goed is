@@ -1,0 +1,192 @@
+using Android.App;
+
+using Android.Widget;
+
+using Android.OS;
+
+using Android.Views;
+
+using Android.Graphics;
+
+using Android.Content;
+
+using Android.Content.PM;
+
+using System;
+
+
+namespace Smiley
+
+{
+
+
+    [Activity(Label = "Smiley", MainLauncher = true, ScreenOrientation = ScreenOrientation.Landscape)]
+
+    public class SmileyApp : Activity
+
+    {
+
+        protected override void OnCreate(Bundle savedInstanceState)
+
+        {
+
+            base.OnCreate(savedInstanceState);
+
+            SmileyView smiley;
+
+            smiley = new SmileyView(this);
+
+            this.SetContentView(smiley);
+
+
+            
+
+        }
+
+
+        public class SmileyView : View
+
+        {
+
+            public SmileyView(Context c) : base(c)
+
+            {
+
+                this.SetBackgroundColor(Color.Yellow);
+
+                this.Touch += RaakAan;
+
+            }
+
+
+            PointF punt;
+
+            public void RaakAan(object sender, TouchEventArgs e)
+
+            {
+
+                float a = e.Event.GetX();
+
+                float b = e.Event.GetY();
+
+                this.punt = new PointF(a, b);
+
+                this.Invalidate();
+
+            }
+
+
+            protected override void OnDraw(Canvas c)
+
+            {
+
+                int x, y, r;
+
+                x = c.Width / 4;
+
+                y = c.Height / 2;
+
+                r = 400;
+
+    
+
+                base.OnDraw(c);
+
+                this.TekenOog(c, x, y, r);
+
+                this.TekenOog(c, x * 3, y, r);
+
+                
+
+            }
+
+
+            private void TekenOog(Canvas c, int x, int y, int r)
+
+            {      // Teken Oogbol
+
+                Paint verf = new Paint();
+
+                verf.SetStyle(Paint.Style.Fill);
+
+                verf.Color = Color.White;
+
+                c.DrawCircle(x, y, r, verf);
+
+                float rp = 40;
+
+
+                // Teken Pupil
+
+
+                if(punt != null)
+
+                {
+
+                    float dx, dy;
+
+                    double d, pd, pa, pb, px, py;
+
+                    Paint pupil = new Paint();
+
+                    pupil.SetStyle(Paint.Style.Fill);
+
+                    pupil.Color = Color.Black;
+
+
+                    float Vx = punt.X;
+
+                    float Vy = punt.Y;
+
+                    dx = Vx - (float)x;
+
+                    dy = Vy - y;
+
+                    d = Math.Sqrt(dx * dx + dy * dy);
+
+                    pd = r - rp;
+
+                    pa = (pd / d) * dx;
+
+                    pb = (pd / d) * dy;
+
+                    px = pa + x;
+
+                    py = pb + y;
+
+                    c.DrawCircle((float)px, (float)py, rp, pupil);
+
+
+                }
+
+                else
+
+                 {
+
+                    Paint pupil1 = new Paint();
+
+                    pupil1.SetStyle(Paint.Style.Fill);
+
+                    pupil1.Color = Color.Black;
+
+                    c.DrawCircle(x, y, rp, pupil1);
+
+
+                }   
+
+                
+
+            }
+
+           
+
+        }
+
+
+
+
+        }
+
+
+
+}
