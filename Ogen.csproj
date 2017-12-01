@@ -1,0 +1,93 @@
+using System;
+using System.Windows.Forms;
+using System.Drawing;
+using System.Windows.Input;
+using System.ComponentModel;
+
+
+
+namespace Eyes
+{
+    class Eyes : Form
+    {
+        int MouseX;
+        int MouseY;
+        float x1, y1;
+
+        public Eyes()
+        {
+            this.MouseMove += new MouseEventHandler(Muis);
+            this.Text = "Eyes"; //titel de form
+            this.BackColor = Color.White; // achtergrond kleur
+            this.Size = new Size(500, 500); // grootte van het scherm
+            this.Paint += this.Ogen;
+            this.DoubleBuffered = true;
+
+
+
+        }
+
+        
+        private void Muis(object o, MouseEventArgs mea)
+        {
+            
+            MouseX = mea.X;
+            MouseY = mea.Y;
+            Invalidate();
+
+            
+          }
+
+        static void Main()
+        {
+            
+            Application.Run(new Eyes());
+        }
+
+        public void Ogen(object o, PaintEventArgs pea) // tekenen van de ogen
+        {
+            float Rdraw, d, Rfill, middenX, middenY, xmid, ymid, MuisX, MuisY, schuin, verhouding, x2, y2;
+            
+
+            //for loop om 2 ogen te tekenen. met 200 pixels ruimte tussen de middelpunten
+            for(x1= 100; x1<=400; x1= x1+200)
+            {
+
+                Rdraw = 150; // straal van de oogbol
+
+                // y-coordinaten van de oogbol
+                y1 = 100;
+
+                d = 0.2f; // schaal oog factor t.o.v. oogbol
+                Rfill = (Rdraw * d); //straal ogen
+
+
+
+                middenX = x1 + (Rdraw / 2);
+                middenY = y1 + (Rdraw / 2);
+
+                //coordinaten oog (midden van de oogbol) 
+                xmid = middenX - (Rfill / 2);
+                ymid = middenY - (Rfill / 2);
+
+                MuisX = MouseX - middenX;
+                MuisY = MouseY - middenY;
+
+                // BEREKENING
+                schuin = (float)Math.Sqrt(Math.Pow((MuisX), 2) + Math.Pow((MuisY), 2));
+                verhouding = (((Rdraw / 2) - (Rfill / 2)) / schuin);
+
+
+                x2 = xmid + (MuisX * verhouding);
+                y2 = ymid + (MuisY * verhouding);
+
+                pea.Graphics.FillEllipse(Brushes.Black, x2, y2, Rfill, Rfill); // oog 
+                pea.Graphics.DrawEllipse(Pens.Black, x1, y1, Rdraw, Rdraw); // oogbol
+                            
+
+            }
+        }
+
+
+    }
+}
